@@ -124,6 +124,7 @@ def red_rfm_top5(df):
      ).reset_index()
     rrr.columns = ['customer_id','customer_name','R','F','M']
     result = rrr.sort_values(by='M',ascending=False).head(5)
+    print(result)
     return result
     
 

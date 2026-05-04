@@ -97,4 +97,4 @@ def red_clean_orders(path):
     df = df.dropna(subset= ['amount','order_date'])
     df = df.drop_duplicates(subset=None, keep='first', inplace=False)
     return df
-
+     

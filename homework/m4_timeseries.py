@@ -129,3 +129,4 @@ def red_monthly_report():
     monthly_report['revenue_growth'] = monthly_report['revenue'].pct_change() * 100
     
     return monthly_report
+ 
