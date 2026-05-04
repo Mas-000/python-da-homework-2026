@@ -43,7 +43,7 @@ def green_top3_dates():
     df['order_date'] = pd.to_datetime(df['order_date'])
     print(df)
     return df['order_date'].value_counts().head(3)
-green_top3_dates()
+
 def green_date_range():
     """
     回傳資料的日期範圍 tuple: (最早日期, 最晚日期)
@@ -53,8 +53,9 @@ def green_date_range():
     df['order_date'] = pd.to_datetime(df['order_date'])
     min_date = df['order_date'].min()
     max_date = df['order_date'].max()
-    return (min_date, max_date)
+    return (min_date,max_date)
 
+green_date_range()
 
 # ============================================================
 # 🟡 核心題（每題 15 分，共 45 分）
@@ -68,8 +69,9 @@ def yellow_monthly_revenue():
     """
     df = _load_data()
     df['order_date'] = pd.to_datetime(df['order_date'])
-    return df.set_index('order_date').resample('ME')['amount'].sum()
-
+    df = df.set_index(['order_date']).resample('ME')['amount'].sum()
+    return df
+ 
 
 def yellow_rolling_avg(monthly_revenue):
     """
@@ -78,7 +80,9 @@ def yellow_rolling_avg(monthly_revenue):
     回傳 Series（同樣 index，values=移動平均，前 2 筆可為 NaN）
     提示：.rolling(window=3).mean()
     """
+
     return monthly_revenue.rolling(window=3).mean()
+    
 
 
 def yellow_category_median(df):
@@ -87,7 +91,13 @@ def yellow_category_median(df):
     回傳 Series（index=category, values=中位數）
     提示：groupby + median + sort_values
     """
-    return df.groupby('category')['amount'].median().sort_values(ascending=False)
+    df = _load_data()
+    df = df.groupby('category')['amount'].median().sort_values(ascending=False)
+    print(df.head())
+    return df
+
+
+
 
 
 # ============================================================
