@@ -15,7 +15,7 @@ def _load_data():
                      parse_dates=["order_date"])
     return df
 
-print(_load_data().head())
+
 # ============================================================
 # 🟢 送分題（每題 10 分，共 30 分）
 # ============================================================
@@ -29,8 +29,9 @@ def green_avg_by_month():
 
     df = _load_data()
     df['order_date'] = pd.to_datetime(df['order_date'])
-    return df.groupby(df['order_date'].dt.month)['amount'].mean()
-  
+    df = df.groupby(df['order_date'].dt.month)['amount'].mean()
+    print(df)
+    return df  
 
 def green_top3_dates():
     """
@@ -40,8 +41,9 @@ def green_top3_dates():
     """
     df = _load_data()
     df['order_date'] = pd.to_datetime(df['order_date'])
+    print(df)
     return df['order_date'].value_counts().head(3)
-
+green_top3_dates()
 def green_date_range():
     """
     回傳資料的日期範圍 tuple: (最早日期, 最晚日期)
