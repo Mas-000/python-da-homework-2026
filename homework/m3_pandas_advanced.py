@@ -29,36 +29,50 @@ def green_load_and_merge():
     df_orders = pd.read_csv(path + "orders_clean.csv")
     df_customers = pd.read_csv(path + "customers.csv")
     df_products = pd.read_csv(path + "products.csv")
-    
-    
-    df_orders['order_date'] = pd.to_datetime(df_orders['order_date'])
- 
-    merged_df = pd.merge(df_orders, df_customers, on='customer_id', how='left')
-    final_df = pd.merge(merged_df, df_products, on='product_id', how='left')
-    
-    return final_df
+
+    m1 = pd.merge(df_orders,df_customers,on='customer_id',how = 'left')
+    m2 = pd.merge(m1,df_products,on='product_id',how = 'left')
+
+    return m2
+
+
+  
 
 def green_row_count(df):
     """回傳 DataFrame 的列數 (int)"""
     return len(df)
 
-
 def green_column_list(df):
     """回傳 DataFrame 的所有欄位名稱 (list)"""
     return df.columns.tolist()
-
 
 # ============================================================
 # 🟡 核心題（每題 15 分，共 45 分）
 # ============================================================
 
+# def yellow_top_category(df):
+#     """
+#     哪個商品類別 (category) 的總營收最高？
+#     回傳該類別名稱 (str)
+#     提示：groupby('category')['amount'].sum()
+#     """
+#     # return df.groupby('category')['amount'].sum().idxmax()
+#     df = df.groupby('category')['amount'].sum().idxmax()
+#     print(df)
+#     return  df
+# print(green_load_and_merge())
+
+
 def yellow_top_category(df):
     """
     哪個商品類別 (category) 的總營收最高？
-    回傳該類別名稱 (str)
-    提示：groupby('category')['amount'].sum()
     """
-    return df.groupby('category')['amount'].sum().idxmax()
+
+    category_totals = df.groupby('category')['amount'].sum().idxmax()
+
+    return category_totals
+
+
 
 
 def yellow_gold_vip_stats(df):
@@ -67,10 +81,11 @@ def yellow_gold_vip_stats(df):
     回傳 tuple: (訂單數 int, 總金額 float)
     提示：df[df['vip_level'] == 'Gold']
     """
+
     gold_df = df[df['vip_level'] == 'Gold']
-    order_count = int(len(gold_df))
-    total_amount = float(gold_df['amount'].sum())
-    return (order_count, total_amount)
+    order_count = len(gold_df)
+    total_amount = gold_df['amount'].sum()
+    return (int(order_count), float(total_amount))
 
 
 def yellow_region_avg_amount(df):
@@ -79,7 +94,8 @@ def yellow_region_avg_amount(df):
     回傳 Series（index=region, values=平均金額）
     提示：groupby('region')['amount'].mean()
     """
-    return df.groupby('region')['amount'].mean()
+    return df.groupby('category')['amount'].mean()
+
 
 
 # ============================================================
@@ -102,10 +118,14 @@ def red_rfm_top5(df):
 
     提示：groupby('customer_id').agg(...)
     """
-    rfm = df.groupby(['customer_id', 'customer_name']).agg(
-        R=('order_date', 'max'),
-        F=('order_id', 'count'),
-        M=('amount', 'sum')
-    ).reset_index()
+ 
+    rrr = df.groupby(['customer_id','customer_name']).agg(
+         {'order_date':'max','order_id':'count','amount':'sum'}
+     ).reset_index()
+    rrr.columns = ['customer_id','customer_name','R','F','M']
+    result = rrr.sort_values(by='M',ascending=False).head(5)
+    return result
     
-    return rfm.sort_values('M', ascending=False).head(5)
+
+
+
