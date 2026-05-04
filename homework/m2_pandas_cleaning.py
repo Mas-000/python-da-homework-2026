@@ -47,8 +47,9 @@ def yellow_clean_columns(df):
     回傳清理後的 DataFrame（不要修改原始 df）
     提示：df.columns.str.strip().str.lower()
     """
-    clear = df.columns.str.strip().str.lower()
-    return clear
+    new_df = df.copy()
+    new_df.columns = new_df.columns.str.strip().str.lower()
+    return new_df
 
 def yellow_clean_amount(df):
     """
@@ -76,7 +77,7 @@ def yellow_drop_duplicates(df):
 # 🔴 挑戰題（25 分）
 # ============================================================
 
-def red_clean_orders():
+def red_clean_orders(path):
     """
     完整清理 pipeline：一個函式搞定所有清理步驟
     1. 讀取 CSV
@@ -89,7 +90,7 @@ def red_clean_orders():
     回傳：清理後的 DataFrame
     提示：pd.to_datetime(errors='coerce')
     """
-    df = pd.read_csv('datasets/ecommerce/orders_raw.csv')
+    df = pd.read_csv(path)
     df.columns = df.columns.str.strip().str.lower()
     df['amount'] = df['amount'].str.replace('$','',regex=False).str.replace(',','',regex=False).astype(float)
     df['order_date'] = pd.to_datetime(df['order_date'],errors='coerce')
