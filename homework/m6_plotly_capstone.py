@@ -25,8 +25,11 @@ def green_plotly_bar():
     回傳 plotly Figure 物件
     提示：px.bar()
     """
-    # TODO: 你的程式碼
-    pass
+    df = _load_data()
+    category_revenue = df.groupby('category')['amount'].sum()
+    fig = px.bar(x=category_revenue.index, y=category_revenue.values, title='Total Revenue by Category')
+    return fig
+
 
 
 def green_plotly_line():
