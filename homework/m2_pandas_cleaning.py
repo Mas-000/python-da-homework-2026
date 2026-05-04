@@ -16,9 +16,9 @@ import pandas as pd
 def green_read_csv():
     """
     讀取 orders_raw.csv，回傳原始 DataFrame（不做任何清理）
-    提示：pd.read_csv()
+    提示：pd.read_csv(s)
     """
-    df = pd.read_csv("datasets/ecommerce/orders_raw.csv")
+    df = pd.read_csv('datasets/ecommerce/orders_raw.csv')
     return df
 
 
@@ -27,7 +27,7 @@ def green_shape(df):
     回傳 DataFrame 的 (列數, 欄數) tuple
     提示：df.shape
     """
-    return df.shape
+    return df.shape 
 
 
 def green_dtypes(df):
@@ -47,15 +47,8 @@ def yellow_clean_columns(df):
     回傳清理後的 DataFrame（不要修改原始 df）
     提示：df.columns.str.strip().str.lower()
     """
-    df2 = df.copy()
-    df2.columns = df.columns.str.strip().str.lower()
-    return df2
-# 1. 執行讀取與清理
-df = yellow_clean_columns(green_read_csv())
-
-# 2. 打印結果
-print(df.columns.tolist()) # 查看清理後的欄位名稱
-print(df.head())           # 查看資料內容
+    clear = df.columns.str.strip().str.lower()
+    return clear
 
 def yellow_clean_amount(df):
     """
@@ -64,25 +57,26 @@ def yellow_clean_amount(df):
     回傳清理後的 DataFrame（不要修改原始 df）
     提示：.str.replace() + .astype(float)
     """
-    df2 = df.copy()
-    df2.columns = df.columns.str.strip().str.lower()
-    df2["amount"] = df2["amount"].str.replace("$", "").str.replace(",", "").astype(float)
-    return df2
+    new_df = df.copy()
+    new_df['amount'] = new_df['amount'].str.replace('$','',regex=False).str.replace(',','',regex=False).astype(float)
+    return new_df
 
 def yellow_drop_duplicates(df):
     """
     移除完全重複的列，回傳去重後的 DataFrame
     提示：df.drop_duplicates()
     """
-    # TODO: 你的程式碼
-    df2 = df.copy()
-    return df2.drop_duplicates()
+    new_df = df.copy()
+    new_df = new_df.drop_duplicates(subset=None, keep='first', inplace=False)
+    return new_df
+
+
 
 # ============================================================
 # 🔴 挑戰題（25 分）
 # ============================================================
 
-def red_clean_orders(path):
+def red_clean_orders():
     """
     完整清理 pipeline：一個函式搞定所有清理步驟
     1. 讀取 CSV
@@ -95,10 +89,11 @@ def red_clean_orders(path):
     回傳：清理後的 DataFrame
     提示：pd.to_datetime(errors='coerce')
     """
-    df = pd.read_csv(path)
+    df = pd.read_csv('datasets/ecommerce/orders_raw.csv')
     df.columns = df.columns.str.strip().str.lower()
-    df["amount"] = df["amount"].str.replace("$", "").str.replace(",", "").astype(float)
-    df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
-    df.dropna(subset=["amount", "order_date"], inplace=True)
-    df.drop_duplicates(inplace=True)
+    df['amount'] = df['amount'].str.replace('$','',regex=False).str.replace(',','',regex=False).astype(float)
+    df['order_date'] = pd.to_datetime(df['order_date'],errors='coerce')
+    df = df.dropna(subset= ['amount','order_date'])
+    df = df.drop_duplicates(subset=None, keep='first', inplace=False)
     return df
+
