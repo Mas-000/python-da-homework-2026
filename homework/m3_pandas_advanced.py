@@ -94,7 +94,7 @@ def yellow_region_avg_amount(df):
     回傳 Series（index=region, values=平均金額）
     提示：groupby('region')['amount'].mean()
     """
-    return df.groupby('category')['amount'].mean()
+    return df.groupby('region')['amount'].mean()
 
 
 
